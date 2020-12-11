@@ -23,9 +23,9 @@ pub fn run() {
         if line.is_empty() {
             entries.push(curr_entry.clone());
             curr_entry.clear();
+        } else {
+            curr_entry.extend(split_line_or_entry(line));
         }
-
-        curr_entry.extend(split_line_or_entry(line));
     }
     entries.push(curr_entry);
 

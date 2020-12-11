@@ -8,14 +8,38 @@ pub fn run() {
     part2(&lines);
 }
 
-fn part1(lines: &[&str]) {
-    for l in lines.iter() {
-        println!("{}", l);
+fn seat_number(line: &str) -> i32 {
+    assert_eq!(line.len(), 10);
+
+    // The seat number are just in a weird binary format:
+    // 'B' & 'R' are 1s
+    // 'F' & 'L' are 0s
+    let mut seat = 0;
+    for (i, c) in line.chars().enumerate() {
+        match c {
+            'B' | 'R' => seat += 1 << (9 - i),
+            'F' | 'L' => (),
+            _ => panic!("Unknown character {}", c),
+        }
     }
 
-    println!("Day 5, part 1: {}", lines.len());
+    return seat;
+}
+
+fn part1(lines: &[&str]) {
+    let highest_seat_number = lines.iter().map(|l| seat_number(l)).max().unwrap();
+    println!("Day 5, part 1: {}", highest_seat_number);
 }
 
 fn part2(lines: &[&str]) {
-    println!("Day 5, part 2: {}", lines.len());
+    let mut taken_seats = [false; 1024];
+    lines.iter().for_each(|l| taken_seats[seat_number(l) as usize] = true);
+
+    let first_seat = taken_seats.iter().position(|s| *s == true).unwrap();
+    let my_seat = first_seat + taken_seats[first_seat..]
+        .iter()
+        .position(|s| *s == false)
+        .unwrap();
+
+    println!("Day 5, part 2: {}", my_seat);
 }
