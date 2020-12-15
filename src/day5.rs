@@ -19,7 +19,7 @@ fn seat_number(line: &str) -> i32 {
         match c {
             'B' | 'R' => seat += 1 << (9 - i),
             'F' | 'L' => (),
-            _ => panic!("Unknown character {}", c),
+            _ => panic!("Unknown character {}.", c),
         }
     }
 
