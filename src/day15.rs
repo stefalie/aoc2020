@@ -1,19 +1,17 @@
-use std::collections::HashMap;
-
 fn play(numbers: &[i32], n: usize) -> i32 {
-    let mut last_turn: HashMap<i32, i32> = HashMap::new();
+    let mut last_turn = vec![None; n - 1];  // Faster than HashMap
 
     for (i, n) in numbers[..(numbers.len() - 1)].iter().enumerate() {
-        last_turn.insert(*n, i as i32  + 1);
+        last_turn[*n as usize] = Some(i as i32  + 1);
     }
 
     let mut last: i32 = *numbers.iter().last().unwrap();
     for i in (numbers.len() + 1)..=n {
-        let curr = match last_turn.get(&last) {
+        let curr = match last_turn[last as usize] {
             Some(t) => i as i32 - 1 - t,
             None => 0,
         };
-        last_turn.insert(last, i as i32 - 1);
+        last_turn[last as usize] = Some(i as i32 - 1);
         last = curr;
     }
 
