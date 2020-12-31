@@ -1,3 +1,4 @@
+//use num_bigint::BigUint;
 use std::collections::{HashSet, VecDeque};
 
 pub fn run() {
@@ -48,8 +49,15 @@ fn part1(cards1: &[u32], cards2: &[u32]) {
     println!("Day 22, part 1: {}", score_deck(&win_deck));
 }
 
+//fn mult_pack_hash(deck: &VecDeque<u32>) -> BigUint {
+//    deck.iter().fold(BigUint::from(0u32), |acc, c| {
+//        acc * BigUint::from(50u32) + BigUint::from(c - 1)
+//    })
+//}
+
 fn deck1_wins_rec(deck1: &mut VecDeque<u32>, deck2: &mut VecDeque<u32>) -> bool {
     let mut states: HashSet<(VecDeque<u32>, VecDeque<u32>)> = HashSet::new();
+    //let mut states: HashSet<(BigUint, BigUint)> = HashSet::new();
 
     while !deck1.is_empty() && !deck2.is_empty() {
         // Have we already encountered the same game state before?
@@ -58,12 +66,21 @@ fn deck1_wins_rec(deck1: &mut VecDeque<u32>, deck2: &mut VecDeque<u32>) -> bool 
         // But I think it might be incorrect because there is a chance that it could fail
         // (very small chance though). And I think the check needs to happen at the
         // beginning of the loop.
-        //
-        // This is slow as heck and way to many copies for my taste. :-(
-        if states.contains(&(deck1.clone(), deck2.clone())) {
+        let hash = (deck1.clone(), deck2.clone());
+        if states.contains(&hash) {
             return true;
         }
-        states.insert((deck1.clone(), deck2.clone()));
+        states.insert(hash);
+        //
+        // I thought the following would be faster, but it isn't:
+        // Instead of putting the entire VecDeques into a hashset let's compute some unique
+        // "hashes" ourselves. It's based on:
+        // http://number-none.com/product/Packing%20Integers/index.html
+        //let hash = (mult_pack_hash(deck1), mult_pack_hash(deck2));
+        //if states.contains(&hash) {
+        //    return true;
+        //}
+        //states.insert(hash);
 
         let c1 = deck1.pop_front().unwrap();
         let c2 = deck2.pop_front().unwrap();
