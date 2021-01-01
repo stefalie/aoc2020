@@ -43,6 +43,8 @@ fn lcm(a: u64, b: u64) -> u64 {
     a * b / gcd(a, b)
 }
 
+// See also: https://fasterthanli.me/series/advent-of-code-2020/part-13
+// But I didn't know about any of that at the time.
 fn part2(frequencies: &[(u64, u64)]) {
     let mut timestamp = 0;
     let mut step = frequencies[0].1;
